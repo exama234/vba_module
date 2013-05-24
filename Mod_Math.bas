@@ -7,7 +7,7 @@ Attribute VB_Name = "Mod_Math"
 ' 使用方法： val = max(300, 299.99)
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 Public Function max(arg1 As Variant, arg2 As Variant) As Variant
-	' テスト追加。
+	' テスト追加。再度追加。
     If (arg1 > arg2) Then
         max = arg1
     Else
