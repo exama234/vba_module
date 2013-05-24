@@ -48,6 +48,16 @@ End Function
 
 
 
+''''''''''''''''''''''''''''''''''''''''''''''''''
+' 説明　　： 「保存」ダイアログを表示する。
+' 引数１　： 初期時に入力される保存ファイル名。（デフォルト値：""）
+' 引数２　： ファイル拡張子の絞り込み指定。（デフォルト値：""）
+' 引数３　： 絞り込みのインデックス。（デフォルト値：0）
+' 返り値　： 保存されたファイルの絶対パス。
+'            ダイアログがキャンセルされた際は空文字が返ります。
+' 使用方法： file_fullpath = SaveFileDialog()
+'            file_fullpath = SaveFileDialog("output.csv", "CSV ファイル (*.csv),*.csv,テキストファイル (*.txt),*.txt", 1)
+''''''''''''''''''''''''''''''''''''''''''''''''''
 Public Function SaveFileDialog(Optional init_filename As String = "", Optional filter As String = "", Optional idx As Integer = 0) As Variant
     Dim file_fullpath As Variant
 
@@ -61,6 +71,9 @@ Public Function SaveFileDialog(Optional init_filename As String = "", Optional f
         SaveFileDialog = file_fullpath
     End If
 End Function
+
+
+
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 ' 説明　　： 「参照」ダイアログを表示する。
 ' 返り値　： 選択されたフォルダの絶対パス。

@@ -93,7 +93,7 @@ Public Function Array2Collection(ByRef list As Variant) As Collection
     index = 0
     For index = LBound(list) To UBound(list)
         ' 配列の要素をコレクションに追加する。
-        col.Add list(index)
+        col.add list(index)
     Next index
     
     Set Array2Collection = col

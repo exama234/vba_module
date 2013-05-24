@@ -21,15 +21,20 @@ Public Function toString(item As Variant) As String
     ' select文
     Select Case TypeName(item)
         Case "Byte", "Integer", "Long", "Boolean", "Single", "Double", "Currency"
+            ' 数値はそのまま表示する。
             tmp = item
         Case "String"
+            ' 文字列はダブルクォーテーションで囲んで表示する。
             tmp = """" & item & """"
         Case "Date"
+            ' 日付はシャープで囲んで表示する。
             tmp = "#" & item & "#"
         Case "Nothing", "Empty", "Null", "Error"
+            ' Nothingなどは括弧で囲んで表示する。
             tmp = "(" & TypeName(item) & ")"
         Case Else
             If IsArray(item) Then
+                ' 配列については全要素を抽出する。
                 Dim v As Variant
                 For idx = LBound(item) To UBound(item)
                     If IsObject(item(idx)) Then
@@ -41,6 +46,7 @@ Public Function toString(item As Variant) As String
                     tmp = tmp & delim & toString(v)
                     delim = ", "
                 Next idx
+                ' 全要素リストはブラケットで囲んで表示する。
                 tmp = "[" & tmp & "]"
             Else
                 If Mod_Class.hasMethod(item, "toString") Then
@@ -68,7 +74,7 @@ End Function
 ' 使用方法： If hasMethod(obj, "toString") Then
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 Public Function hasMethod(obj As Variant, method As String) As Boolean
-On Error GoTo ErrHandler
+    On Error GoTo ErrHandler
     ' オブジェクトに指定のメソッドがあるなら実行する。
     Call CallByName(obj, method, VbMethod)
     ' 例外が発生しなかった為、成功。

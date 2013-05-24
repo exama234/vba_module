@@ -7,15 +7,18 @@ Attribute VB_Name = "Mod_ExcelCell"
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 Public Function CheckRange(strRange As String) As Boolean
     Dim rng As Range
-
+    
+    ' 引数セルのアドレスを参照する。
     On Error GoTo RangeError
     Set rng = Range(strRange)
     Set rng = Nothing
     
+    ' 例外が発生しなかった為、成功。
     CheckRange = True
     Exit Function
 
 RangeError:
+    ' 例外発生。
     CheckRange = False
 End Function
 
@@ -52,8 +55,8 @@ Public Function getRangeCell(cell As Range, command As String, arg As Integer) A
     
     startRow = tmpCell.Row
     startColumn = tmpCell.Column
-    endRow = tmpCell(tmpCell.Count).Row
-    endColumn = tmpCell(tmpCell.Count).Column
+    endRow = tmpCell(tmpCell.count).Row
+    endColumn = tmpCell(tmpCell.count).Column
     Select Case Trim(LCase(command))
         Case "top"
             endRow = startRow + arg - 1
