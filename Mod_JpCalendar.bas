@@ -1,0 +1,112 @@
+Attribute VB_Name = "Mod_JpCalendar"
+Public Enum era
+    ' 使用予定なし。
+    明治 = 0
+    大正 = 1
+    昭和 = 2
+    平成 = 3
+End Enum
+
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+' 説明　　： 引数指定の和暦年月日が存在するかをチェックする。
+' 　　　　： ただし明治以降と対象としています。
+' 　　　　： うるう年や旧暦からの改暦によるずれも考慮。
+' 引数１　： 元号。
+' 引数２　： 年。
+' 引数３　： 月。
+' 引数４　： 日。
+' 返り値　： 和暦として存在する場合、真を返す。
+' 使用方法： If isExistJpCalendar('昭和', 22, 3, 4) Then
+''''''''''''''''''''''''''''''''''''''''''''''''''
+Public Function isExistJpCalendar(arg_era As String, arg_year As Integer, arg_month As Integer, arg_day As Integer) As Integer
+    If arg_year < 1 Then
+        ' 存在しない年。
+        Exit Function
+    End If
+    If arg_month < 1 Or 12 < arg_month Then
+        ' 存在しない月。
+        Exit Function
+    End If
+    If arg_day < 1 Or 31 < arg_day Then
+        ' 存在しない日。
+        Exit Function
+    End If
+    
+    Select Case Strings.Trim(arg_era)
+        ' 【豆知識】
+        ' 慶応4年9月8日。
+        ' 「今日から明治を使うよー。
+        ' でもきりが悪いから今までの慶応4年1月1日～9月8日は明治元年1月1日～9月8日でもあるよー。
+        ' かぶるけど気にしないでね。」
+        ' 【豆知識】
+        ' 明治45年7月30日。
+        ' 「今日から大正を使うよー。今日だけは明治45年7月30日でも大正元年7月30日でもあるよー。
+        ' かぶるけど気にしないでね。」
+        ' 【豆知識】
+        ' 大正15年12月25日。
+        ' 「今日から昭和を使うよー。今日だけは大正15年12月25日でも昭和元年12月25日でもあるよー。
+        ' かぶるけど気にしないでね。」
+        ' 【豆知識】
+        ' 昭和64年1月7日。
+        ' 「今日は昭和64年1月7日、明日は平成元年1月8日だよー。今回はかぶらないから安心してね。」
+        Case "明治"
+            ' 1868/01/01 - 1912/07/30（明治45年まで）
+            start_date = #1/1/1868#
+            end_date = #7/30/1912#
+        Case "大正"
+            ' 1912/07/30 - 1926/12/25（大正15年まで）
+            start_date = #7/30/1912#
+            end_date = #12/25/1926#
+        Case "昭和"
+            ' 1926/12/25 - 1989/01/07（昭和64年まで）
+            start_date = #12/25/1926#
+            end_date = #1/7/1989#
+        Case "平成"
+            ' 1989/01/08 - 20XX/XX/XX（ちよに やちよに）
+            start_date = #1/8/1989#
+            end_date = #12/31/9999#
+        Case Else
+            ' 存在しない元号。
+            Exit Function
+    End Select
+    
+    ' 西暦（文字列）に変換する。
+    Dim base_year, dominical_year As Integer
+    base_year = Year(start_date)
+    dominical_year = base_year + arg_year - 1
+    str_yyyymmdd = dominical_year & "/" & CStr(arg_month) & "/" & CStr(arg_day)
+    ' 西暦（日付型）に変換する。
+    Dim dominical_date As Date
+    dominical_date = DateValue(str_yyyymmdd)
+    
+    
+    If #12/2/1872# < dominical_date And dominical_date < #1/1/1873# Then
+        ' 存在しない日付。
+        ' 【豆知識】
+        ' 「明治5年12月2日」の翌日が「明治6年1月1日」。
+        ' ※「太政官布告」により、太陰太陽暦（旧暦）から太陽暦(グレゴリオ暦)に改暦。
+        Exit Function
+    End If
+    
+    If dominical_date < start_date Or end_date < dominical_date Then
+        ' 存在しない日付。年号の最終日を超えている。
+        Exit Function
+    End If
+    
+    Dim last_day As Variant
+    last_day = Array(-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    If Mod_Date.isIntercalaryYear(Year(dominical_date)) Then
+        ' うるう年2月は29日まで。
+        last_day(2) = 29
+    End If
+    If last_day(arg_month) < arg_day Then
+        ' 存在しない日。
+        Exit Function
+    End If
+    
+    ' 和暦として存在する。
+    isExistJpCalendar = True
+End Function
+
