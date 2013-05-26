@@ -79,6 +79,12 @@ Public Sub RemoveAll()
 End Sub
 
 
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+' 説明　　： オブジェクトの文字列表現を取得する。
+' 返り値　： オブジェクトの文字列表現。
+' 使用方法： MsgBox map.toString()
+''''''''''''''''''''''''''''''''''''''''''''''''''
 Public Function toString() As String
     '
     Dim key, buff, tmp, delim As String
