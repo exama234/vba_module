@@ -20,7 +20,22 @@ End Enum
 ' 返り値　： 和暦として存在する場合、真を返す。
 ' 使用方法： If isExistJpCalendar('昭和', 22, 3, 4) Then
 ''''''''''''''''''''''''''''''''''''''''''''''''''
-Public Function isExistJpCalendar(arg_era As String, arg_year As Integer, arg_month As Integer, arg_day As Integer) As Integer
+Public Function isExistJpCalendar(arg_era As String, arg_year As Integer, arg_month As Integer, arg_day As Integer) As Boolean
+    Dim date1 As Date
+    date1 = getDominicalDate(arg_era, arg_year, arg_month, arg_day)
+    
+    If date1 = 0 Then
+        ' 和暦として存在しない。
+        Exit Function
+    End If
+    
+    ' 和暦として存在する。
+    isExistJpCalendar = True
+End Function
+
+
+
+Private Function getDominicalDate(arg_era As String, arg_year As Integer, arg_month As Integer, arg_day As Integer) As Date
     If arg_year < 1 Then
         ' 存在しない年。
         Exit Function
@@ -77,6 +92,19 @@ Public Function isExistJpCalendar(arg_era As String, arg_year As Integer, arg_mo
     base_year = Year(start_date)
     dominical_year = base_year + arg_year - 1
     str_yyyymmdd = dominical_year & "/" & CStr(arg_month) & "/" & CStr(arg_day)
+    
+    
+    Dim last_day As Variant
+    last_day = Array(-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    If Mod_Date.isIntercalaryYear(dominical_year) Then
+        ' うるう年2月は29日まで。
+        last_day(2) = 29
+    End If
+    If last_day(arg_month) < arg_day Then
+        ' 存在しない日。
+        Exit Function
+    End If
+    
     ' 西暦（日付型）に変換する。
     Dim dominical_date As Date
     dominical_date = DateValue(str_yyyymmdd)
@@ -95,18 +123,8 @@ Public Function isExistJpCalendar(arg_era As String, arg_year As Integer, arg_mo
         Exit Function
     End If
     
-    Dim last_day As Variant
-    last_day = Array(-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
-    If Mod_Date.isIntercalaryYear(Year(dominical_date)) Then
-        ' うるう年2月は29日まで。
-        last_day(2) = 29
-    End If
-    If last_day(arg_month) < arg_day Then
-        ' 存在しない日。
-        Exit Function
-    End If
     
     ' 和暦として存在する。
-    isExistJpCalendar = True
+    getDominicalDate = dominical_date
 End Function
 
