@@ -31,18 +31,18 @@ End Function
 ' 引数３　： 演算子に対する引数数値。
 ' 返り値　： 新たなセル範囲を返す。
 ' 使用方法： Dim new_range As Range
-'            new_range = getRangeCell(cell_range, "top",    2)  ' セル範囲の上2行を新たなセル範囲として返す。
-'            new_range = getRangeCell(cell_range, "left",   2)  ' セル範囲の左2列を新たなセル範囲として返す。
-'            new_range = getRangeCell(cell_range, "right",  2)  ' セル範囲の右2列を新たなセル範囲として返す。
-'            new_range = getRangeCell(cell_range, "bottom", 2)  ' セル範囲の下2行を新たなセル範囲として返す。
-'            new_range = getRangeCell(cell_range, "topLimit",    10)  ' セル範囲が上10行を超えている場合、上10行を新たなセル範囲として返す。
-'            new_range = getRangeCell(cell_range, "leftLimit",   10)  ' セル範囲が左10列を超えている場合、左10列を新たなセル範囲として返す。
-'            new_range = getRangeCell(cell_range, "rightLimit",  10)  ' セル範囲が右10列を超えている場合、右10列を新たなセル範囲として返す。
-'            new_range = getRangeCell(cell_range, "bottomLimit", 10)  ' セル範囲が下10行を超えている場合、下10行を新たなセル範囲として返す。
-'            new_range = getRangeCell(cell_range, "topResize",     5)  ' セル範囲を上へ5行引き延ばした範囲を新たなセル範囲として返す。
-'            new_range = getRangeCell(cell_range, "leftResize",    5)  ' セル範囲を左へ5列引き延ばした範囲を新たなセル範囲として返す。
-'            new_range = getRangeCell(cell_range, "rightResize",  -1)  ' セル範囲を右へ1列狭めた範囲新たなセル範囲として返す。
-'            new_range = getRangeCell(cell_range, "bottomResize", -1)  ' セル範囲を下へ1行狭めた範囲新たなセル範囲として返す。
+'            Set new_range = getRangeCell(cell_range, "top",    2)  ' セル範囲の上2行を新たなセル範囲として返す。
+'            Set new_range = getRangeCell(cell_range, "left",   2)  ' セル範囲の左2列を新たなセル範囲として返す。
+'            Set new_range = getRangeCell(cell_range, "right",  2)  ' セル範囲の右2列を新たなセル範囲として返す。
+'            Set new_range = getRangeCell(cell_range, "bottom", 2)  ' セル範囲の下2行を新たなセル範囲として返す。
+'            Set new_range = getRangeCell(cell_range, "topLimit",    10)  ' セル範囲が上10行を超えている場合、上10行を新たなセル範囲として返す。
+'            Set new_range = getRangeCell(cell_range, "leftLimit",   10)  ' セル範囲が左10列を超えている場合、左10列を新たなセル範囲として返す。
+'            Set new_range = getRangeCell(cell_range, "rightLimit",  10)  ' セル範囲が右10列を超えている場合、右10列を新たなセル範囲として返す。
+'            Set new_range = getRangeCell(cell_range, "bottomLimit", 10)  ' セル範囲が下10行を超えている場合、下10行を新たなセル範囲として返す。
+'            Set new_range = getRangeCell(cell_range, "topResize",     5)  ' セル範囲を上へ5行引き延ばした範囲を新たなセル範囲として返す。
+'            Set new_range = getRangeCell(cell_range, "leftResize",    5)  ' セル範囲を左へ5列引き延ばした範囲を新たなセル範囲として返す。
+'            Set new_range = getRangeCell(cell_range, "rightResize",  -1)  ' セル範囲を右へ1列狭めた範囲新たなセル範囲として返す。
+'            Set new_range = getRangeCell(cell_range, "bottomResize", -1)  ' セル範囲を下へ1行狭めた範囲新たなセル範囲として返す。
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 Public Function getRangeCell(cell As Range, command As String, arg As Integer) As Range
     Set sheet = cell.Worksheet
