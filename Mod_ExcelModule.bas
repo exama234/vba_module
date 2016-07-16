@@ -6,21 +6,21 @@ Public Enum overwrite
 End Enum
 
 Sub ModuleImport()
-  'ƒvƒƒWƒFƒNƒg‚ÌéŒ¾
+  'ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å®£è¨€
   Set Project = ActiveWorkbook.VBProject.VBComponents
  
-  'Path‚ğw’è
+  'Pathã‚’æŒ‡å®š
   Dim pathlist As Variant
 '  pathlist = OpenFileDialogMultiSelect()
         Dim file_list As Variant
     
-        ' uƒtƒ@ƒCƒ‹‚ğŠJ‚­vƒ_ƒCƒAƒƒO‚ğŠJ‚«‚Ü‚·Bi•¡”‘I‘ğ‰Â”\j
+        ' ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’é–‹ãã¾ã™ã€‚ï¼ˆè¤‡æ•°é¸æŠå¯èƒ½ï¼‰
         file_list = Application.GetOpenFilename(, , , , True)
     
-        ' ƒtƒ@ƒCƒ‹‚ª‘I‘ğ‚³‚ê‚½Û‚Í•¶š—ñŒ^iƒtƒ@ƒCƒ‹–¼jA
-        ' ƒLƒƒƒ“ƒZƒ‹‚³‚ê‚½Û‚ÍBooleanŒ^iFalsej‚ª•Ô‚è‚Ü‚·¡
+        ' ãƒ•ã‚¡ã‚¤ãƒ«ãŒé¸æŠã•ã‚ŒãŸéš›ã¯æ–‡å­—åˆ—å‹ï¼ˆãƒ•ã‚¡ã‚¤ãƒ«åï¼‰ã€
+        ' ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚ŒãŸéš›ã¯Booleanå‹ï¼ˆFalseï¼‰ãŒè¿”ã‚Šã¾ã™ï½¡
         If VarType(file_list) <> vbBoolean Then
-            ' ƒŠƒXƒgi‘I‘ğƒtƒ@ƒCƒ‹‚Ìâ‘ÎƒpƒXj‚ğ•Ô‚·B
+            ' ãƒªã‚¹ãƒˆï¼ˆé¸æŠãƒ•ã‚¡ã‚¤ãƒ«ã®çµ¶å¯¾ãƒ‘ã‚¹ï¼‰ã‚’è¿”ã™ã€‚
             pathlist = file_list
         End If
   If IsEmpty(pathlist) Then
@@ -28,13 +28,33 @@ Sub ModuleImport()
   End If
   
   For Each v In pathlist
-    ' Importˆ—B
+    ' Importå‡¦ç†ã€‚
     Project.Import v
   Next v
   
 End Sub
 
 
+Sub ModuleRemove()
+    Dim mdlName As String
+    'ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å®£è¨€
+    Set Components = ActiveWorkbook.VBProject.VBComponents
+    
+    For i = Components.count To 1 Step -1
+        If Components(i).Type < 4 Then
+            Dim keizoku As Integer
+            mdlName = Components(i).Name
+            answer = MsgBox("ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ" & vbCrLf & vbTab & mdlName, vbYesNoCancel)
+            Select Case answer
+                Case vbYes  'ã€€ã€Œã¯ã„ã€ã‚’ã‚¯ãƒªãƒƒã‚¯
+                    Components.remove Components(mdlName)
+                Case vbNo    'ã€€ã€Œã„ã„ãˆã€ã‚’ã‚¯ãƒªãƒƒã‚¯
+                Case Else
+                    Exit For
+            End Select
+        End If
+    Next
+End Sub
 
 
 
@@ -43,10 +63,10 @@ End Sub
 Private Function getExportFolderPath(Optional lump_flag As String = True) As String
   Dim folder_fullpath As Variant
   If lump_flag Then
-    ' ˆêŠ‡
+    ' ä¸€æ‹¬
     folder_fullpath = FolderDialog()
     If folder_fullpath = "" Then
-        ' I—¹
+        ' çµ‚äº†
         End
     End If
   End If
@@ -79,7 +99,7 @@ Public Sub ModuleExportUserForm(Optional lump_flag As String = True, Optional ov
     Call ModuleExport(folder_path, 3, over_write_flg)
 End Sub
 Public Sub ModuleExport(folder_path As String, Optional module_type As Integer = 0, Optional over_write_flg As overwrite = overwrite.warning)
-  ' ƒ‚ƒWƒ…[ƒ‹‚ğ‚·‚×‚ÄƒGƒNƒXƒ|[ƒg
+  ' ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’ã™ã¹ã¦ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆ
   Set ComponentList = ActiveWorkbook.VBProject.VBComponents
   Dim component As Object
   For Each component In ComponentList
@@ -91,28 +111,28 @@ End Sub
 
 Private Function getExportFlg(file_fullpath As String, Optional over_write_flg As overwrite = overwrite.warning) As Boolean
     If Mod_File.isExistFile(file_fullpath) = False Then
-        ' ƒtƒ@ƒCƒ‹‚ª‘¶İ‚µ‚È‚¢‚½‚ßA‚»‚Ì‚Ü‚Üo—Í‰Â”\B
+        ' ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã—ãªã„ãŸã‚ã€ãã®ã¾ã¾å‡ºåŠ›å¯èƒ½ã€‚
         getExportFlg = True
         Exit Function
     End If
     
     
-    ' Šù‚Éƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚éB
-    ' o—Í‰Â”\‚©‚Íã‘‚«ƒtƒ‰ƒO‚É‚æ‚Á‚Ä”»’f‚·‚éB
+    ' æ—¢ã«ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã€‚
+    ' å‡ºåŠ›å¯èƒ½ã‹ã¯ä¸Šæ›¸ããƒ•ãƒ©ã‚°ã«ã‚ˆã£ã¦åˆ¤æ–­ã™ã‚‹ã€‚
     Dim export_flg As Boolean
     export_flg = False
     Select Case over_write_flg
         Case overwrite.yes
-              ' ˆø”‚É‚Äã‘‚«w’è‚³‚ê‚Ä‚¢‚éB
+              ' å¼•æ•°ã«ã¦ä¸Šæ›¸ãæŒ‡å®šã•ã‚Œã¦ã„ã‚‹ã€‚
             export_flg = True
         Case overwrite.warning
-              ' ˆø”‚É‚Äã‘‚«‚ğŠm”F‚·‚éB
-              answer1 = MsgBox("ƒtƒ@ƒCƒ‹‚ªŠù‚É‘¶İ‚µ‚Ü‚·B" & vbNewLine & "ã‘‚«‚µ‚Ü‚·‚©B" & vbNewLine & vbTab & file_fullpath, vbYesNo)
+              ' å¼•æ•°ã«ã¦ä¸Šæ›¸ãã‚’ç¢ºèªã™ã‚‹ã€‚
+              answer1 = MsgBox("ãƒ•ã‚¡ã‚¤ãƒ«ãŒæ—¢ã«å­˜åœ¨ã—ã¾ã™ã€‚" & vbNewLine & "ä¸Šæ›¸ãã—ã¾ã™ã‹ã€‚" & vbNewLine & vbTab & file_fullpath, vbYesNo)
               If answer1 = vbYes Then
                 export_flg = True
               End If
         Case overwrite.no
-              ' ˆø”‚É‚Äã‘‚«‚µ‚È‚¢B
+              ' å¼•æ•°ã«ã¦ä¸Šæ›¸ãã—ãªã„ã€‚
             export_flg = False
     End Select
     
@@ -123,43 +143,43 @@ End Function
 Private Function getExportFilename(component As Object, Optional folder_path As String) As String
     Dim file_fullpath As Variant
     
-    ' •Û‘¶ƒtƒ@ƒCƒ‹–¼‚ğæ“¾‚·‚éB
+    ' ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—ã™ã‚‹ã€‚
     Dim filename_only As String
     Select Case component.Type
         Case 1
-            ' •W€ƒ‚ƒWƒ…[ƒ‹
+            ' æ¨™æº–ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
             filename_only = component.Name & ".bas"
         Case 2
-            ' ƒNƒ‰ƒXƒ‚ƒWƒ…[ƒ‹
+            ' ã‚¯ãƒ©ã‚¹ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
             filename_only = component.Name & ".cls"
         Case 3
-            ' ƒ†[ƒU[ƒtƒH[ƒ€
+            ' ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ•ã‚©ãƒ¼ãƒ 
             filename_only = component.Name & ".frm"
         Case Else
             Exit Function
     End Select
-    ' •Û‘¶ƒtƒ@ƒCƒ‹–¼iâ‘ÎƒpƒXj‚ğæ“¾‚·‚éB
+    ' ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆçµ¶å¯¾ãƒ‘ã‚¹ï¼‰ã‚’å–å¾—ã™ã‚‹ã€‚
     If folder_path = "" Then
-        ' uƒtƒ@ƒCƒ‹•Û‘¶vƒ_ƒCƒAƒƒO‚Å•Û‘¶æ‚ğw’è
+        ' ã€Œãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜ã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã§ä¿å­˜å…ˆã‚’æŒ‡å®š
         file_fullpath = Mod_Dialog.SaveFileDialog(filename_only)
         If IsEmpty(file_fullpath) Then
-            ' ƒLƒƒƒ“ƒZƒ‹‚³‚ê‚½B
+            ' ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚ŒãŸã€‚
             Exit Function
         End If
     Else
         If Mod_File.isExistFolder(folder_path) = False Then
-            ' ˆø”w’è‚Ìo—ÍæƒtƒHƒ‹ƒ_‚ª‘¶İ‚µ‚È‚¢B
+            ' å¼•æ•°æŒ‡å®šã®å‡ºåŠ›å…ˆãƒ•ã‚©ãƒ«ãƒ€ãŒå­˜åœ¨ã—ãªã„ã€‚
             Exit Function
         End If
         file_fullpath = folder_path & Application.PathSeparator & filename_only
     End If
     
-    ' o—Íƒtƒ@ƒCƒ‹‚Ìâ‘ÎƒpƒX‚ğ•Ô‚·B
+    ' å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«ã®çµ¶å¯¾ãƒ‘ã‚¹ã‚’è¿”ã™ã€‚
     getExportFilename = file_fullpath
 End Function
 
 Public Sub ModuleExportUnit(component As Object, Optional folder_path As String, Optional over_write_flg As overwrite = overwrite.warning)
-    ' •Û‘¶ƒtƒ@ƒCƒ‹–¼‚ğæ“¾‚·‚éB
+    ' ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—ã™ã‚‹ã€‚
     Dim file_fullpath As String
     file_fullpath = getExportFilename(component, folder_path)
     If file_fullpath = "" Then
@@ -169,7 +189,7 @@ Public Sub ModuleExportUnit(component As Object, Optional folder_path As String,
     Dim flg1 As Boolean
     flg1 = getExportFlg(file_fullpath, over_write_flg)
     If flg1 Then
-        ' Exportˆ—B
+        ' Exportå‡¦ç†ã€‚
         component.Export file_fullpath
     End If
 End Sub
