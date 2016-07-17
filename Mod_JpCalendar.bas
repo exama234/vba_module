@@ -131,14 +131,6 @@ Public Function getDominicalDate(arg_era As String, arg_year As Integer, arg_mon
     dominical_date = DateValue(str_yyyymmdd)
     
     
-    If #12/2/1872# < dominical_date And dominical_date < #1/1/1873# Then
-        ' 存在しない日付。
-        ' 【豆知識】
-        ' 「明治5年12月2日」の翌日が「明治6年1月1日」。
-        ' ※「太政官布告」により、太陰太陽暦（旧暦）から太陽暦(グレゴリオ暦)に改暦。
-        Exit Function
-    End If
-    
     If dominical_date < start_date Or end_date < dominical_date Then
         ' 存在しない日付。年号の最終日を超えている。
         Exit Function
