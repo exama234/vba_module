@@ -1,5 +1,23 @@
 Attribute VB_Name = "Mod_File"
 ''''''''''''''''''''''''''''''''''''''''''''''''''
+' 説明　　： 絶対パスのファイル名からドライブ名のみを取得する。
+' 引数１　： ファイルの絶対パス。
+' 返り値　： ドライブ名のみを返す。
+' 使用方法： drive_name = getDrive("C:\folder1\file1.txt")
+''''''''''''''''''''''''''''''''''''''''''''''''''
+Public Function getDrive(ByVal filefullpath As String) As String
+    Dim FSO
+    Dim drive As String
+    
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    drive = FSO.getDriveName(filefullpath)
+    Set FSO = Nothing
+    
+    getDrive = drive
+End Function
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
 ' 説明　　： 絶対パスのファイル名からパスのみを取得する。
 ' 引数１　： ファイルの絶対パス。
 ' 返り値　： パスを返す。
@@ -35,6 +53,41 @@ Public Function getFilename(ByVal filefullpath As String) As String
 End Function
 
 
+''''''''''''''''''''''''''''''''''''''''''''''''''
+' 説明　　： 絶対パスのファイル名からベース名のみを取得する。
+' 引数１　： ファイルの絶対パス。
+' 返り値　： ベース名のみを返す。
+' 使用方法： basename = getBasename("C:\folder1\file1.txt")
+''''''''''''''''''''''''''''''''''''''''''''''''''
+Public Function getBasename(ByVal filefullpath As String) As String
+    Dim FSO
+    Dim basename As String
+    
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    basename = FSO.getBasename(filefullpath)
+    Set FSO = Nothing
+    
+    getBasename = basename
+End Function
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+' 説明　　： 絶対パスのファイル名から拡張子のみを取得する。
+' 引数１　： ファイルの絶対パス。
+' 返り値　： 拡張子のみを返す。
+' 使用方法： ext = getExt("C:\folder1\file1.txt")
+''''''''''''''''''''''''''''''''''''''''''''''''''
+Public Function getExt(ByVal filefullpath As String) As String
+    Dim FSO
+    Dim ext As String
+    
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    ext = FSO.GetExtensionName(filefullpath)
+    Set FSO = Nothing
+    
+    getExt = ext
+End Function
+
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 ' 説明　　： 指定ファイルが存在するかをチェックする。
@@ -58,7 +111,6 @@ Public Function isExistFile(ByRef filefullpath As String) As Boolean
     Set FSO = Nothing
     isExistFile = False
 End Function
-
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -85,8 +137,14 @@ Public Function isExistFolder(ByRef filefullpath As String) As Boolean
 End Function
 
 
-
-Function getFileList(folder_path As String, Optional regex_str As String = "*") As Collection
+''''''''''''''''''''''''''''''''''''''''''''''''''
+' 説明　　： 指定フォルダからファイルリストを取得する。
+' 引数１　： フォルダの絶対パス。
+' 引数２　： 取得ファイルの正規表現文字列。
+' 返り値　： ファイルのコレクションを返す。
+' 使用方法： Set file_col = getFileList(path)
+''''''''''''''''''''''''''''''''''''''''''''''''''
+Function getFileList(folder_path As String, Optional regex_str As String = ".*") As Collection
     Dim regex As Object
     Set regex = CreateObject("VBScript.RegExp")
     regex.Pattern = regex_str
@@ -105,8 +163,8 @@ Function getFileList(folder_path As String, Optional regex_str As String = "*") 
     Dim FileList As Object
     Set FileList = FSO.GetFolder(folder_path).Files
     For Each tmp In FileList
-        If regex.test(tmp.name) Then
-            col.add tmp.path
+        If regex.Test(tmp.Name) Then
+            col.Add tmp.path
         End If
     Next
     
@@ -114,9 +172,9 @@ Function getFileList(folder_path As String, Optional regex_str As String = "*") 
     Dim folderList As Object
     Set folderList = FSO.GetFolder(folder_path).SubFolders
     For Each tmp In folderList
-        Set col2 = getFileList(folder_path & "\" & tmp.name, regex_str)
+        Set col2 = getFileList(folder_path & "\" & tmp.Name, regex_str)
         For Each tmp2 In col2
-            col.add tmp2
+            col.Add tmp2
         Next
     Next
     
